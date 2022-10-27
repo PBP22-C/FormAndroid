@@ -1,76 +1,100 @@
 package com.example.pbpform;
 
-import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
+import android.content.res.Configuration;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.content.Intent;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import android.os.Bundle;
 
-import com.example.pbpform.databinding.ActivityMainBinding;
-
-import android.view.Menu;
-import android.view.MenuItem;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
-
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
+    Button sendButton;
+    EditText nameText;
+    EditText placeText;
+    TextView birthText;
+    DatePickerDialog.OnDateSetListener setListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        sendButton = findViewById(R.id.buttonId);
+        nameText = findViewById(R.id.nameId);
+        placeText = findViewById(R.id.placeId);
+        birthText = findViewById(R.id.birthId);
 
-        setSupportActionBar(binding.toolbar);
+        Calendar calendar = Calendar.getInstance();
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-    }
+        int nightModeFlags =
+                getApplicationContext().getResources().getConfiguration().uiMode &
+                        Configuration.UI_MODE_NIGHT_MASK;
+        int bgDatePicker = 0;
+        switch (nightModeFlags) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                bgDatePicker = android.R.color.background_light;
+                break;
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+            case Configuration.UI_MODE_NIGHT_YES:
+                bgDatePicker = android.R.color.background_dark;
+                break;
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
         }
 
-        return super.onOptionsItemSelected(item);
-    }
+        int finalBgDatePicker = bgDatePicker;
+        birthText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        MainActivity.this,
+                        setListener,
+                        year, month, day);
+                datePickerDialog.getWindow().setBackgroundDrawableResource(finalBgDatePicker);
+                datePickerDialog.show();
+            }
+        });
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
+        setListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                String date = day + "/" + month + "/" + year;
+                birthText.setText(date);
+            }
+        };
+
+
+        //add on click listener to button
+        sendButton.setOnClickListener(v -> {
+            //get text from edit text
+            String str1 = nameText.getText().toString();
+            String str2 = placeText.getText().toString();
+            String str3 = birthText.getText().toString();
+            if(str3.equals("Tanggal Lahir")){
+                str3 = "";
+            }
+            //create intent
+            Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+
+            //put text in intent
+            intent.putExtra("msgKey", str1);
+            intent.putExtra("msgKey1", str2);
+            intent.putExtra("msgKey2", str3);
+
+            //start activity
+            startActivity(intent);
+        });
     }
 }
