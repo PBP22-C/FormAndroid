@@ -13,30 +13,30 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ResultActivity extends AppCompatActivity {
 
-    TextView textView1;
-    TextView textView2;
-    TextView textView3;
+    TextView textNamaLengkap;
+    TextView textBirthPlace;
+    TextView textBirthDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
-        textView1 = findViewById(R.id.receiver1);
-        textView2 = findViewById(R.id.receiver2);
-        textView3 = findViewById(R.id.receiver3);
+        textNamaLengkap = findViewById(R.id.receiver1);
+        textBirthPlace = findViewById(R.id.receiver2);
+        textBirthDate = findViewById(R.id.receiver3);
 
         //get intent
         Intent intent = getIntent();
 
         //get data from intent
-        String str1 = intent.getStringExtra("msgKey");
-        String str2 = intent.getStringExtra("msgKey1");
-        String str3 = intent.getStringExtra("msgKey2");
+        String namaLengkap = intent.getStringExtra("namaLengkap");
+        String birthPlace = intent.getStringExtra("birthPlace");
+        String birthDate = intent.getStringExtra("birthDate");
 
         //set text to text view
-        textView1.setText(str1);
-        textView2.setText(str2);
-        textView3.setText(str3);
+        textNamaLengkap.setText(namaLengkap);
+        textBirthPlace.setText(birthPlace);
+        textBirthDate.setText(birthDate);
     }
 }

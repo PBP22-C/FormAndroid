@@ -79,19 +79,21 @@ public class MainActivity extends AppCompatActivity {
         //add on click listener to button
         sendButton.setOnClickListener(v -> {
             //get text from edit text
-            String str1 = nameText.getText().toString();
-            String str2 = placeText.getText().toString();
-            String str3 = birthText.getText().toString();
-            if(str3.equals("Tanggal Lahir")){
-                str3 = "";
+            String namaLengkap = nameText.getText().toString();
+            String birthPlace = placeText.getText().toString();
+            String birthDate = birthText.getText().toString();
+
+            if(birthDate.equals("Tanggal Lahir")){
+                birthDate = "";
             }
+
             //create intent
             Intent intent = new Intent(MainActivity.this, ResultActivity.class);
 
             //put text in intent
-            intent.putExtra("msgKey", str1);
-            intent.putExtra("msgKey1", str2);
-            intent.putExtra("msgKey2", str3);
+            intent.putExtra("namaLengkap", namaLengkap);
+            intent.putExtra("birthPlace", birthPlace);
+            intent.putExtra("birthDate", birthDate);
 
             //start activity
             startActivity(intent);
